@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+curl -sL https://raw.githubusercontent.com/noobyysauraj/telegram_bash_bot/master/util.sh -o util.sh
+TOKEN=$BOT_TOKEN
+source util.sh
+
 # Constants
 MANIFEST="https://github.com/PitchBlackRecoveryProject/manifest_pb.git"
 MANIFEST_BRANCH="android-12.1"
@@ -32,4 +36,6 @@ sed -i 's/102760448/67108864/g' device/realme/RMX2001/BoardConfig.mk
 cd "out/target/product/$DEVICE"
 
 curl -sL https://git.io/file-transfer | sh
-./transfer wet recovery.img
+file_link=$(./transfer --silent wet recovery.img)
+tg --sendmsg -1001299514785 "$file_link"
+tg --pinmsg -1001299514785 "$SENT_MSG_ID"
