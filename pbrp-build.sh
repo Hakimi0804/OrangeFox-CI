@@ -31,7 +31,7 @@ sed -i 's/102760448/67108864/g' device/realme/RMX2001/BoardConfig.mk
 
 . build/envsetup.sh && \
     lunch "omni_$DEVICE-eng" && \
-    make -j8 pbrp
+    make -j8 pbrp || exit $?
  
 cd "out/target/product/$DEVICE"
 
