@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -o pipefail
+
 curl -sL https://raw.githubusercontent.com/Hakimi0804/tgbot/main/util.sh -o util.sh
 source util.sh
 
@@ -61,7 +63,7 @@ git clone "$DT_LINK" --depth=1 --single-branch -b "$DT_BRANCH" "$DT_PATH"
 MSG_TITLE+=($'\nBuilding for RM6785\n')
 . build/envsetup.sh && \
     lunch "omni_$DEVICE-eng" && \
-    { make -j8 pbrp || fail; } &
+    { make -j8 pbrp | tee -a "build_$DEVICE.log" || fail; } &
 
 until [ -z "$(jobs -r)" ]; do
     updateProg
@@ -89,7 +91,7 @@ sed -i 's/102760448/67108864/g' device/realme/RMX2001/BoardConfig.mk
 MSG_TITLE+=($'\nBuilding for RMX2001\n')
 . build/envsetup.sh && \
     lunch "omni_$DEVICE-eng" && \
-    { make -j8 pbrp || fail; } &
+    { make -j8 pbrp | tee -a build_$DEVICE.log || fail; } &
 
 until [ -z "$(jobs -r)" ]; do
     updateProg
