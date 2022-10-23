@@ -1,8 +1,6 @@
 env:
     # Cirrus Specific Vars (Do *NOT* Change)
     CIRRUS_SHELL: bash
-    TOKEN: ENCRYPTED[6d518771e557b56baebb2ede3d91059daa8f1b7750843a0875a5cfc9613595b78879dfafd75d4f058ae3b9927878e1d5]
-    BOT_TOKEN: ENCRYPTED[!56696dbfb5e7fcd2790dd9ceb333b5c9d0bda790c643b097d271bf6d603a84a12feebb8f0ae4c2cd9599abe59405441f!]
 
 task:
   name: "Recovery Build"
