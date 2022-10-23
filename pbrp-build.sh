@@ -26,6 +26,9 @@ df -h
 mkdir work
 cd work
 
+# Setup transfer
+curl -sL https://git.io/file-transfer | sh
+
 updateProg() {
     BUILD_PROGRESS=$(
             sed -n '/ ninja/,$p' "build_$DEVICE.log" | \
