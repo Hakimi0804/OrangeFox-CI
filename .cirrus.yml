@@ -16,4 +16,4 @@ task:
       - apt-get -y upgrade
       - apt-get -y install curl
       - apt-get -y install bc build-essential zip curl libstdc++6 git wget python3 gcc clang libssl-dev repo rsync flex bison aria2 jq
-      - curl -sL https://raw.githubusercontent.com/Hakimi0804/OrangeFox-CI/main/pbrp-build.sh | bash
+      - curl -sL https://raw.githubusercontent.com/Hakimi0804/OrangeFox-CI/main/pbrp-build-x3sz.sh | bash
