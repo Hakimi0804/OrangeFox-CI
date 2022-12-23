@@ -10,7 +10,7 @@ MANIFEST="https://github.com/PitchBlackRecoveryProject/manifest_pb.git"
 MANIFEST_BRANCH="android-12.1"
 DEVICE="RM6785"
 DT_LINK="https://github.com/PitchBlackRecoveryProject/android_device_realme_RMX2001-pbrp"
-DT_BRANCH="android-12.1-cirrus"
+DT_BRANCH="android-12.1"
 DT_PATH="device/realme/RM6785"
 n=$'\n'
 
@@ -58,7 +58,7 @@ fail() {
 tg --sendmsg "$CHAT_ID" "${MSG_TITLE[*]}Progress: Syncing repo"
 
 repo init --depth=1 -u "$MANIFEST" -b "$MANIFEST_BRANCH"
-repo sync -c -j4 --force-sync --no-clone-bundle --no-tags
+repo sync -c --no-clone-bundle --no-tags --optimized-fetch --prune --force-sync -j$(nproc --all)
 
 git clone "$DT_LINK" --depth=1 --single-branch -b "$DT_BRANCH" "$DT_PATH"
 
