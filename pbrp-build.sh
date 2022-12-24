@@ -8,10 +8,10 @@ source util.sh
 # Constants
 MANIFEST="https://github.com/PitchBlackRecoveryProject/manifest_pb.git"
 MANIFEST_BRANCH="android-12.1"
-DEVICE="RM6785"
+DEVICE="RMX2001"
 DT_LINK="https://github.com/PitchBlackRecoveryProject/android_device_realme_RMX2001-pbrp"
 DT_BRANCH="android-12.1"
-DT_PATH="device/realme/RM6785"
+DT_PATH="device/realme/RMX2001"
 n=$'\n'
 
 CHAT_ID=-1001664444944
@@ -60,10 +60,14 @@ tg --sendmsg "$CHAT_ID" "${MSG_TITLE[*]}Progress: Syncing repo"
 repo init --depth=1 -u "$MANIFEST" -b "$MANIFEST_BRANCH"
 repo sync -c --no-clone-bundle --no-tags --optimized-fetch --prune --force-sync -j$(nproc --all)
 
+BUILD_PROGRESS="Cloning device tree"
+editProg
 git clone "$DT_LINK" --depth=1 --single-branch -b "$DT_BRANCH" "$DT_PATH"
 
-# Build for RM6785 (except realme 6)
-MSG_TITLE+=($'\nBuilding for RM6785\n')
+# Build for RMX2001
+MSG_TITLE+=($'\nBuilding for RMX2001\n')
+BUILD_PROGRESS="Initializing build system"
+editProg
 . build/envsetup.sh && \
     lunch "omni_$DEVICE-eng" && \
     { make -j8 pbrp | tee -a "build_$DEVICE.log" || fail; } &
@@ -77,21 +81,25 @@ done
 updateProg
 editProg
 file_link=$(./transfer --silent wet out/target/product/$DEVICE/recovery.img)
-MSG_TITLE+=("RM6785 link: $file_link$n")
+MSG_TITLE+=("RMX2001 link: $file_link$n")
 
 
 
 
-## REALME 6 ##
-DEVICE=RMX2001
-
+## The rest of rm6785 ##
+DEVICE=RM6785
+BUILD_PROGRESS="Preparing for RM6785 build"
+editProg
 # Add for the unified commit
-mv device/realme/{RM6785,RMX2001}
-mv device/realme/RMX2001/omni_{RM6785,RMX2001}.mk
-sed -i 's/RM6785/RMX2001/g' device/realme/RMX2001/*.mk
-sed -i 's/102760448/67108864/g' device/realme/RMX2001/BoardConfig.mk
+mv device/realme/{RMX2001,RM6785}
+mv device/realme/RM6785/omni_{RMX2001,RM6785}.mk
+sed -i 's/RMX2001/RM6785/g' device/realme/RM6785/*.mk
+#sed -i 's/102760448/67108864/g' device/realme/RMX2001/BoardConfig.mk
+sed -i 's/67108864/102760448/g' device/realme/RM6785/BoardConfig.mk
 
-MSG_TITLE+=($'\nBuilding for RMX2001\n')
+MSG_TITLE+=($'\nBuilding for RM6785\n')
+BUILD_PROGRESS="Initializing build system"
+editProg
 . build/envsetup.sh && \
     lunch "omni_$DEVICE-eng" && \
     { make -j8 pbrp | tee -a build_$DEVICE.log || fail; } &
