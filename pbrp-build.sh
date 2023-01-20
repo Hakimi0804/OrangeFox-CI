@@ -109,3 +109,6 @@ file_link=$(./transfer --silent wet out/target/product/$DEVICE/recovery.img)
 MSG_TITLE+=("RMX2001 link: $file_link$n")
 BUILD_PROGRESS="Finished successfully"
 editProg
+
+nSENT_MSG_ID=$(tg --fwdmsg $CHAT_ID -1001299514785 $SENT_MSG_ID | jq .result.message_id)
+tg --pinmsg -1001299514785  $nSENT_MSG_ID
