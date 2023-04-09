@@ -27,7 +27,7 @@ mkdir work
 cd work
 
 # Setup transfer
-curl -sL https://git.io/file-transfer | sh
+sh -c "$(curl -sL https://git.io/file-transfer)"
 
 updateProg() {
     BUILD_PROGRESS=$(
