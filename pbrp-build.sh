@@ -76,7 +76,7 @@ done
 
 updateProg
 editProg
-file_link=$(./transfer --silent wet out/target/product/$DEVICE/recovery.img)
+file_link=$(./transfer --silent gof out/target/product/$DEVICE/recovery.img)
 MSG_TITLE+=("RM6785 link: $file_link$n")
 
 
@@ -105,7 +105,7 @@ done
 updateProg
 editProg
 
-file_link=$(./transfer --silent wet out/target/product/$DEVICE/recovery.img)
+file_link=$(./transfer --silent gof out/target/product/$DEVICE/recovery.img)
 MSG_TITLE+=("RMX2001 link: $file_link$n")
 BUILD_PROGRESS="Finished successfully"
 editProg
