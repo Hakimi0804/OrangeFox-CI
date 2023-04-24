@@ -12,6 +12,7 @@ DEVICE="RM6785"
 DT_LINK="https://github.com/PitchBlackRecoveryProject/android_device_realme_RMX2001-pbrp"
 DT_BRANCH="android-12.1-cirrus"
 DT_PATH="device/realme/RM6785"
+GOF_SERVER=$(curl -sL https://api.gofile.io/getServer | jq -r .data.server)
 n=$'\n'
 
 CHAT_ID=-1001664444944
@@ -76,7 +77,7 @@ done
 
 updateProg
 editProg
-file_link=$(./transfer --silent gof out/target/product/$DEVICE/recovery.img)
+file_link=$(curl -sL https://"${GOF_SERVER}".gofile.io/uploadFile -F file=@out/target/product/$DEVICE/recovery.img | jq -r .data.downloadPage)
 MSG_TITLE+=("RM6785 link: $file_link$n")
 
 
@@ -105,7 +106,7 @@ done
 updateProg
 editProg
 
-file_link=$(./transfer --silent gof out/target/product/$DEVICE/recovery.img)
+file_link=$(curl -sL https://"${GOF_SERVER}".gofile.io/uploadFile -F file=@out/target/product/$DEVICE/recovery.img | jq -r .data.downloadPage)
 MSG_TITLE+=("RMX2001 link: $file_link$n")
 BUILD_PROGRESS="Finished successfully"
 editProg
