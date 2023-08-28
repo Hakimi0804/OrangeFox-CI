@@ -8,12 +8,17 @@ source util.sh
 # Constants
 MANIFEST="https://github.com/PitchBlackRecoveryProject/manifest_pb.git"
 MANIFEST_BRANCH="android-12.1"
-DEVICE="RM6785"
+DEVICE="RMX2001"
 DT_LINK="https://github.com/PitchBlackRecoveryProject/android_device_realme_RMX2001-pbrp"
 DT_BRANCH="android-12.1"
-DT_PATH="device/realme/RM6785"
+DT_PATH="device/realme/RMX2001"
 GOF_SERVER=$(curl -sL https://api.gofile.io/getServer | jq -r .data.server)
 n=$'\n'
+
+DEVICER7="RMX2151"
+DT_LINKR7="https://github.com/PitchBlackRecoveryProject/android_device_realme_RMX2151-pbrp"
+DT_BRANCHR7="android-12.1"
+DT_PATHR7="device/realme/RMX2151"
 
 CHAT_ID=-1001664444944
 MSG_TITLE=(
@@ -63,8 +68,7 @@ repo sync -c --no-clone-bundle --no-tags --optimized-fetch --prune --force-sync 
 
 git clone "$DT_LINK" --depth=1 --single-branch -b "$DT_BRANCH" "$DT_PATH"
 
-# Build for RM6785 (except realme 6)
-MSG_TITLE+=($'\nBuilding for RM6785\n')
+MSG_TITLE+=($'\nBuilding for RMX2001\n')
 . build/envsetup.sh && \
     lunch "omni_$DEVICE-eng" && \
     { make -j8 pbrp | tee -a "build_$DEVICE.log" || fail; } &
@@ -78,21 +82,17 @@ done
 updateProg
 editProg
 file_link=$(curl -sL https://"${GOF_SERVER}".gofile.io/uploadFile -F file=@out/target/product/$DEVICE/recovery.img | jq -r .data.downloadPage)
-MSG_TITLE+=("RM6785 link: $file_link$n")
+MSG_TITLE+=("RMX2001 link: $file_link$n")
 
 
 
 
-## REALME 6 ##
-DEVICE=RMX2001
+## REALME 7/Narzo 20 Pro/Narzo 30 4G ##
 
-# Add for the unified commit
-mv device/realme/{RM6785,RMX2001}
-mv device/realme/RMX2001/omni_{RM6785,RMX2001}.mk
-sed -i 's/RM6785/RMX2001/g' device/realme/RMX2001/*.mk
-sed -i 's/102760448/67108864/g' device/realme/RMX2001/BoardConfig.mk
+git clone "$DT_LINKR7" "$DT_PATHR7" --depth=1 --single-branch -b "$DT_BRANCHR7"
 
-MSG_TITLE+=($'\nBuilding for RMX2001\n')
+DEVICE=$DEVICER7
+MSG_TITLE+=($'\nBuilding for RMX2151\n')
 . build/envsetup.sh && \
     lunch "omni_$DEVICE-eng" && \
     { make -j8 pbrp | tee -a build_$DEVICE.log || fail; } &
@@ -107,7 +107,7 @@ updateProg
 editProg
 
 file_link=$(curl -sL https://"${GOF_SERVER}".gofile.io/uploadFile -F file=@out/target/product/$DEVICE/recovery.img | jq -r .data.downloadPage)
-MSG_TITLE+=("RMX2001 link: $file_link$n")
+MSG_TITLE+=("RMX2151 link: $file_link$n")
 BUILD_PROGRESS="Finished successfully"
 editProg
 
