@@ -61,17 +61,32 @@ fail() {
     exit 1
 }
 
+tg --sendmsg "-1001299514785" "PBRP Build started. View progress in https://t.me/Hakimi0804_SC"
 tg --sendmsg "$CHAT_ID" "${MSG_TITLE[*]}Progress: Syncing repo"
 
 repo init --depth=1 -u "$MANIFEST" -b "$MANIFEST_BRANCH"
-repo sync -c --no-clone-bundle --no-tags --optimized-fetch --prune --force-sync -j$(nproc --all)
+repo sync -c --no-clone-bundle --no-tags --optimized-fetch --prune --force-sync -j$(nproc --all) 2>&1 | tee -a reposync.log &
+repo_sync_start=$(date +%s)
+until [ -z "$(jobs -r)" ]; do
+    tempdiff=$(($(date +%s) - repo_sync_start))
+    BUILD_PROGRESS="Repo syncing. Time elapsed: $((tempdiff / 60)) min $((tempdiff % 60)) sec"
+    editProg
+    sleep 5
+done
+repo_sync_end=$(date +%s)
+repo_sync_diff=$((repo_sync_end - repo_sync_start))
+repo_sync_time="$((repo_sync_diff / 3600)) hour and $(($((repo_sync_diff / 60)) % 60)) minute(s)"
+BUILD_PROGRESS=""
+editProg
+unset BUILD_PROGRESS
+MSG_TITLE+=("Repo sync took $repo_sync_time$n")
 
 git clone "$DT_LINK" --depth=1 --single-branch -b "$DT_BRANCH" "$DT_PATH"
 
 MSG_TITLE+=($'\nBuilding for RMX2001\n')
 . build/envsetup.sh && \
     lunch "omni_$DEVICE-eng" && \
-    { make -j8 pbrp | tee -a "build_$DEVICE.log" || fail; } &
+    { make -j8 recoveryimage | tee -a "build_$DEVICE.log" || fail; } &
 
 until [ -z "$(jobs -r)" ]; do
     updateProg
@@ -95,7 +110,7 @@ DEVICE=$DEVICER7
 MSG_TITLE+=($'\nBuilding for RMX2151\n')
 . build/envsetup.sh && \
     lunch "omni_$DEVICE-eng" && \
-    { make -j8 pbrp | tee -a build_$DEVICE.log || fail; } &
+    { make -j8 recoveryimage | tee -a build_$DEVICE.log || fail; } &
 
 until [ -z "$(jobs -r)" ]; do
     updateProg
